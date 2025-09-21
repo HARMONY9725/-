@@ -3,32 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>漢字ルートマップ</title>
+<title>漢字地図マップ</title>
 <style>
-body { font-family: serif; padding: 20px; }
-#map { display:none; } /* 表示用に非表示でもOK */
-.route { margin-top: 20px; white-space: pre-line; }
+body { font-family: monospace; padding: 20px; }
+#routeDisplay { white-space: pre; font-size: 18px; line-height: 1.4; }
+input, button { font-size: 16px; padding: 5px; margin: 5px; }
 </style>
 </head>
 <body>
 
-<h1>漢字ルートマップ</h1>
+<h1>漢字地図ルート</h1>
 <div>
-  出発地: <input id="start" type="text" placeholder="例：東京駅">
-  目的地: <input id="end" type="text" placeholder="例：渋谷駅">
+  出発地: <input id="start" placeholder="例：東京駅">
+  目的地: <input id="end" placeholder="例：渋谷駅">
   <button id="searchBtn">検索</button>
 </div>
 
-<div class="route" id="routeDisplay"></div>
+<pre id="routeDisplay"></pre>
 
-<!-- Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
 <script>
 const display = document.getElementById("routeDisplay");
+
 document.getElementById("searchBtn").addEventListener("click", ()=>{
   const start = document.getElementById("start").value;
   const end = document.getElementById("end").value;
-  if(!start||!end) return;
+  if(!start || !end) return;
 
   const directionsService = new google.maps.DirectionsService();
   directionsService.route({
@@ -36,18 +36,21 @@ document.getElementById("searchBtn").addEventListener("click", ()=>{
     destination: end,
     travelMode: 'DRIVING'
   }, (result, status)=>{
-    if(status==="OK"){
+    if(status === "OK"){
       const steps = result.routes[0].legs[0].steps;
-      display.innerHTML = steps.map((s,i)=>{
-        // 漢字化例: turn_right → 右折
+      let mapText = "";
+      steps.forEach((s, i)=>{
         let instr = s.instructions.replace(/<[^>]*>/g, "");
-        instr = instr.replace(/left/gi,"左折").replace(/right/gi,"右折")
+        // 方向を漢字に変換
+        instr = instr.replace(/left/gi,"左").replace(/right/gi,"右")
                      .replace(/north/gi,"北").replace(/south/gi,"南")
                      .replace(/east/gi,"東").replace(/west/gi,"西")
-                     .replace(/road|street/gi,"道");
-        return `${i+1}：${instr}`;
-      }).join("\n");
-    }else{
+                     .replace(/road|street/gi,"道").replace(/intersection/gi,"十")
+                     .replace(/signal/gi,"灯").replace(/square/gi,"□");
+        mapText += `${i+1}：${instr}\n`;
+      });
+      display.textContent = mapText;
+    } else {
       display.textContent = "ルート取得失敗";
     }
   });
