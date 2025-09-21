@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>漢字搜尋</title>
+<title>遇求瑠検索</title>
 <style>
   body {
     font-family: "Microsoft JhengHei", sans-serif;
@@ -45,8 +45,8 @@
 <h1>搜尋</h1>
 
 <form id="searchForm">
-  <input type="text" id="query" placeholder="請輸入漢字">
-  <button type="submit">搜索</button>
+  <input type="text" id="query" placeholder="入力漢字">
+  <button type="submit">検索</button>
 </form>
 
 <div id="reversed"></div>
@@ -60,10 +60,6 @@ form.addEventListener("submit", e=>{
   e.preventDefault();
   const original = queryInput.value.trim();
   if(!original) return;
-
-  // 文字を逆順に表示（遊び要素）
-  const reversed = original.split("").reverse().join("");
-  reversedDiv.textContent = "逆向顯示: " + reversed;
 
   // Google 繁體字検索
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(original)}&hl=zh-TW`;
