@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢字ルートマップ</title>
+<style>
+body { font-family: serif; padding: 20px; }
+#map { display:none; } /* 表示用に非表示でもOK */
+.route { margin-top: 20px; white-space: pre-line; }
+</style>
+</head>
+<body>
+
+<h1>漢字ルートマップ</h1>
+<div>
+  出発地: <input id="start" type="text" placeholder="例：東京駅">
+  目的地: <input id="end" type="text" placeholder="例：渋谷駅">
+  <button id="searchBtn">検索</button>
+</div>
+
+<div class="route" id="routeDisplay"></div>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<script>
+const display = document.getElementById("routeDisplay");
+document.getElementById("searchBtn").addEventListener("click", ()=>{
+  const start = document.getElementById("start").value;
+  const end = document.getElementById("end").value;
+  if(!start||!end) return;
+
+  const directionsService = new google.maps.DirectionsService();
+  directionsService.route({
+    origin: start,
+    destination: end,
+    travelMode: 'DRIVING'
+  }, (result, status)=>{
+    if(status==="OK"){
+      const steps = result.routes[0].legs[0].steps;
+      display.innerHTML = steps.map((s,i)=>{
+        // 漢字化例: turn_right → 右折
+        let instr = s.instructions.replace(/<[^>]*>/g, "");
+        instr = instr.replace(/left/gi,"左折").replace(/right/gi,"右折")
+                     .replace(/north/gi,"北").replace(/south/gi,"南")
+                     .replace(/east/gi,"東").replace(/west/gi,"西")
+                     .replace(/road|street/gi,"道");
+        return `${i+1}：${instr}`;
+      }).join("\n");
+    }else{
+      display.textContent = "ルート取得失敗";
+    }
+  });
+});
+</script>
+
+</body>
+</html>
