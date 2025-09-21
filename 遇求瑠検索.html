@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>遇求瑠検索</title>
+<title>漢字搜尋</title>
 <style>
   body {
     font-family: "Microsoft JhengHei", sans-serif;
@@ -33,10 +33,10 @@
     font-size: 20px;
     cursor: pointer;
   }
-  #reversed {
-    margin-top: 20px;
-    font-size: 24px;
-    color: #333;
+  #error {
+    margin-top: 10px;
+    color: red;
+    font-size: 18px;
   }
 </style>
 </head>
@@ -46,22 +46,30 @@
 
 <form id="searchForm">
   <input type="text" id="query" placeholder="入力漢字">
-  <button type="submit">検索</button>
+  <button type="submit">遇求瑠検索</button>
 </form>
 
-<div id="reversed"></div>
+<div id="error"></div>
 
 <script>
 const form = document.getElementById("searchForm");
 const queryInput = document.getElementById("query");
-const reversedDiv = document.getElementById("reversed");
+const errorDiv = document.getElementById("error");
+
+const kanjiRegex = /^[\u4E00-\u9FFF]+$/;
 
 form.addEventListener("submit", e=>{
   e.preventDefault();
   const original = queryInput.value.trim();
+  errorDiv.textContent = "";
+
   if(!original) return;
 
-  // Google 繁體字検索
+  if(!kanjiRegex.test(original)){
+    errorDiv.textContent = "問題：可能只入力漢字！";
+    return;
+  }
+
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(original)}&hl=zh-TW`;
   window.open(searchUrl, "_blank");
 });
