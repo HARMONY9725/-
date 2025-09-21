@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>遇求瑠</title>
+<title>漢字搜尋</title>
 <style>
   body {
-    font-family: "Yu Gothic", sans-serif;
+    font-family: "Microsoft JhengHei", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f5f5;
+    background-color: #f0f0f0;
   }
   h1 {
     font-size: 48px;
@@ -42,11 +42,11 @@
 </head>
 <body>
 
-<h1>遇求瑠検索</h1>
+<h1>搜尋</h1>
 
 <form id="searchForm">
-  <input type="text" id="query" placeholder="漢字入力">
-  <button type="submit">検索</button>
+  <input type="text" id="query" placeholder="請輸入漢字">
+  <button type="submit">搜索</button>
 </form>
 
 <div id="reversed"></div>
@@ -61,12 +61,12 @@ form.addEventListener("submit", e=>{
   const original = queryInput.value.trim();
   if(!original) return;
 
-  // 文字を逆順に表示
+  // 文字を逆順に表示（遊び要素）
   const reversed = original.split("").reverse().join("");
-  reversedDiv.textContent = "逆向表示: " + reversed;
+  reversedDiv.textContent = "逆向顯示: " + reversed;
 
-  // Google 検索（漢字そのまま）
-  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(original)}`;
+  // Google 繁體字検索
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(original)}&hl=zh-TW`;
   window.open(searchUrl, "_blank");
 });
 </script>
